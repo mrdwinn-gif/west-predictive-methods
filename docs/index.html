@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>west-predictive-methods — WEST</title>
+<meta name="description" content="Predictive methods from nonlinear dynamics — phase-space reconstruction, Takens embedding, FNN, twRQA and bifurcation detection. WEST open code.">
+<style>
+  :root { --navy:#0a1428; --navy2:#12233f; --gold:#c9a227; --gold-light:#e8c766; --text:#e8ecf3; --muted:#9aa8bf; }
+  body { margin:0; font-family:Georgia, 'Times New Roman', serif; background:var(--navy); color:var(--text); line-height:1.6; }
+  main { max-width:760px; margin:0 auto; padding:40px 20px 64px; }
+  h1, h2 { color:var(--gold); }
+  h2 { border-bottom:1px solid var(--gold); padding-bottom:6px; margin-top:36px; }
+  .bluf { background:var(--navy2); border-left:4px solid var(--gold); padding:16px 20px; margin:24px 0; }
+  table { width:100%; border-collapse:collapse; margin:16px 0; font-size:.95em; }
+  th, td { border:1px solid #2a3d5c; padding:8px 10px; text-align:left; vertical-align:top; }
+  th { color:var(--gold-light); }
+  code { font-family:ui-monospace, Menlo, Consolas, monospace; font-size:.9em; color:var(--gold-light); }
+  .note { font-size:.9em; color:var(--muted); }
+  a { color:var(--gold-light); }
+  footer { text-align:center; color:var(--muted); font-size:.9em; padding:24px 20px 40px; border-top:1px solid #2a3d5c; }
+</style>
+</head>
+<body>
+<main>
+  <h1>west-predictive-methods</h1>
+  <p>Predictive methods from nonlinear dynamics — open code from Western Intelligence LLC (WEST), Director Daniel Patrick Winn.</p>
+  <div class="bluf">
+    <strong>Bottom line up front:</strong> clean, runnable Python implementations of standard methods from nonlinear dynamics and Active Inference, plus a phase-space reconstruction pipeline for multi-channel telemetry. Tested on synthetic Lorenz-63 and R&ouml;ssler benches only — not real telemetry.
+  </div>
+
+  <h2>What is in the repo</h2>
+  <table>
+    <tr><th>Module</th><th>What it contains</th></tr>
+    <tr><td><code>takens_embedding.py</code></td><td>Takens embedding (AMI + false nearest neighbours, phase-space reconstruction)</td></tr>
+    <tr><td><code>rosenstein_mle.py</code></td><td>Maximal Lyapunov exponent (Rosenstein, Collins &amp; De Luca 1993), with Theiler-window exclusion</td></tr>
+    <tr><td><code>lorenz_harness.py</code></td><td>Lorenz-63 integrator + Rosenstein benchmark test harness; theoretical &lambda;&#8321; &asymp; 0.9056</td></tr>
+    <tr><td><code>active_inference.py</code></td><td>Adversarial Active Inference + multi-agent POMDP</td></tr>
+    <tr><td><code>spectrum.py</code></td><td>Full Lyapunov spectrum (Benettin QR), Kaplan&ndash;Yorke dimension, Kolmogorov&ndash;Sinai entropy</td></tr>
+    <tr><td><code>ftle.py</code></td><td>Finite-time Lyapunov exponents, Lagrangian coherent structures, Hessian ridge extraction</td></tr>
+    <tr><td><code>rqa.py</code></td><td>Recurrence quantification analysis (RR / DET / L / Lmax / ENTR / LAM / TT)</td></tr>
+    <tr><td><code>realtime_rqa.py</code></td><td>Sliding-window RQA with a critical-slowing-down tripwire</td></tr>
+    <tr><td><code>theiler_fnn_pca.py</code></td><td>Multivariate zero-copy strided embedding + Theiler-window-corrected FNN with PCA projection</td></tr>
+    <tr><td><code>twrqa_bifurcation.py</code></td><td>PCA-projected sliding-window twRQA + Welford bifurcation detector (NOMINAL / WARNING / BIFURCATION_TRIP)</td></tr>
+    <tr><td><code>zmq_streaming_worker.py</code></td><td>Async ZeroMQ worker: telemetry in on localhost, bifurcation alerts out</td></tr>
+  </table>
+
+  <h2>Honest limitations</h2>
+  <ul>
+    <li>The first source is a <strong>partial export</strong> ("Incomplete Transmission Evaluation", 41 pages) — it ends abruptly mid-table. Nothing has been invented to fill the gap; the truncation is marked <code>INCOMPLETE</code> in <code>ftle.py</code>.</li>
+    <li>Benchmark numbers in the source do not all reproduce (noted in the repo README) — the spectrum reproduces theory, but the source's printed Lorenz/Rosenstein benchmark numbers do not, and one POMDP table is inconsistent.</li>
+    <li>The ZeroMQ streaming worker has <strong>not been runtime-tested</strong>.</li>
+    <li>All test benches use synthetic Lorenz-63 / R&ouml;ssler systems, not real telemetry. This is WEST's design, published as code — not a deployed system and not a claim about any live feed.</li>
+  </ul>
+
+  <h2>Run it</h2>
+  <p><code>pip install -r requirements.txt</code> (Python 3.10+, numpy, scipy; pyzmq and msgpack only for the ZeroMQ worker). Each module is self-contained and runnable — see the repo README for the per-module commands and measured results.</p>
+
+  <p><a href="https://github.com/mrdwinn-gif/west-predictive-methods">Repository on GitHub</a> &middot; <a href="https://mrdwinn-gif.github.io/">Daniel Patrick Winn — WEST</a></p>
+  <p class="note">Source: Gemini chat exports "Incomplete Transmission Evaluation" and "Telemetry Phase Space Reconstruction Pipeline". One real bug in the second source's test benches (a strided-embedding stride reading out-of-bounds memory) was found and fixed; it is documented in the repo README.</p>
+</main>
+<footer>&copy; 2026 Western Intelligence LLC</footer>
+</body>
+</html>
